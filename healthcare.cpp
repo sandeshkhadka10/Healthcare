@@ -7,13 +7,14 @@
 using namespace std;
 class doctor
 {
-    protected:
+protected:
 	char doc_name[50];
 	int license_no;
 	char spec[30];
 	char status[30];
 	int temp_license_no;
-	public:
+
+public:
 	void show(doctor &obj);
 	void check_found(int &found);
 	void AddDoctor();
@@ -22,7 +23,6 @@ class doctor
 	void DeleteAllDoctor();
 	void EditDoctorsDetails();
 	void SearchDoctor();
-	void anesthesiology();
 	void gynocology();
 	void neurology();
 	void radiology();
@@ -31,20 +31,20 @@ class doctor
 	void physiology();
 	void ent();
 };
-	void  doctor::show(doctor &obj)
+void doctor::show(doctor &obj)
+{
+	cout << "\n\t\tName: " << obj.doc_name << endl;
+	cout << "\t\tSpeciality: " << obj.spec << endl;
+	cout << "\t\tLicense no: " << obj.license_no << endl;
+	cout << "\t\t______________________________" << endl;
+}
+void doctor::check_found(int &found)
+{
+	if (found == 0)
 	{
-		cout << "\n\t\tName: " << obj.doc_name << endl;
-		cout << "\t\tSpeciality: " << obj.spec << endl;
-		cout << "\t\tLicense no: " << obj.license_no << endl;
-		cout << "\t\t______________________________" << endl;
+		cout << "\n\t\tNo doctor found!!!!!" << endl;
 	}
-	void doctor::check_found(int &found)
-	{
-		if(found==0)
-		{
-			cout<<"\n\t\tNo doctor found!!!!!"<<endl;
-		}
-	}
+}
 void doctor::AddDoctor()
 {
 	doctor obj;
@@ -60,9 +60,10 @@ void doctor::AddDoctor()
 	ofstream fout;
 	fout.open("doctordata", ios::binary | ios::app);
 	fout.write((char *)&obj, sizeof(obj));
-	cout<<"\n\t\tDetails added successfully"<<endl;
+	cout << "\n\t\tDetails added successfully" << endl;
 	fout.close();
 }
+
 void doctor::DisplayAllDoctors()
 {
 	int found = 0;
@@ -88,7 +89,7 @@ void doctor::DeleteDoctor()
 	int found = 0;
 	doctor obj;
 	system("cls");
-	cout << "\t\t<<------Delete Doctor Details------>> "<< endl;
+	cout << "\t\t<<------Delete Doctor Details------>> " << endl;
 	cout << "\n\t\tEnter license number : ";
 	cin >> temp_license_no;
 	ifstream fin;
@@ -190,28 +191,9 @@ void doctor::SearchDoctor()
 		}
 	}
 	fin.close();
-    check_found(found);
+	check_found(found);
 }
-void doctor::anesthesiology()
-{
-	system("cls");
-	cout << "\t\t<<------Anesthesiology------>>" << endl;
-	doctor obj;
-	int found = 0;
-	ifstream fin;
-	fin.open("doctordata", ios::binary);
-	fin.seekg(0, ios::beg);
-	while (fin.read((char *)&obj, sizeof(obj)))
-	{
-		if (strcmp(obj.spec, "anesthesiology") == 0)
-		{
-			found = 1;
-			show(obj);
-		}
-	}
-    check_found(found);
-	fin.close();
-}
+
 void doctor::physiology()
 {
 	system("cls");
@@ -269,7 +251,7 @@ void doctor::neurology()
 			show(obj);
 		}
 	}
- 	check_found(found);
+	check_found(found);
 	fin.close();
 }
 void doctor::radiology()
@@ -289,7 +271,7 @@ void doctor::radiology()
 			show(obj);
 		}
 	}
- 	check_found(found);
+	check_found(found);
 	fin.close();
 }
 void doctor::cardiology()
@@ -330,7 +312,7 @@ void doctor::hysterology()
 			show(obj);
 		}
 	}
-    check_found(found);
+	check_found(found);
 	fin.close();
 }
 void doctor::ent()
@@ -350,146 +332,148 @@ void doctor::ent()
 			show(obj);
 		}
 	}
-    check_found(found);
+	check_found(found);
 	fin.close();
 }
 
-class credentials {
-	private:
-		char username[50];
-		char password[50];
-		char pin[5];
-		char p[5];
-		char temp_un[50];
-		char temp_pass[50];
-		
-		public:
-			void signup();
-			void pi_n();
-			int login();
-			void forgot_pass();
-			
+class credentials
+{
+private:
+	char username[50];
+	char password[11];
+	char pin[5];
+	char p[5];
+	char temp_un[50];
+	char temp_pass[11];
 
+public:
+	void signup();
+	void pi_n();
+	int login();
+	void forgot_pass();
 };
 
-void credentials ::signup() {
-				credentials obj;
-				cout<<"\n\t\tEnter new username: ";
-				cin>>obj.username;
-				int i=0;
-				cout<< "\t\tEnter new password: ";
-				while(true) {
-					char  ch = _getch();
-					if(ch==13)
-						break;
-					obj.password[i] = ch;
-					cout<< '*';
-					i++;
-				}
-				obj.password[i] = '\0';
-				ofstream fout;
-				fout.open("p_confidentials", ios::trunc|ios::binary);
-				fout.write((char*)&obj,sizeof(obj));
-				fout.close();
+void credentials ::signup()
+{
+	credentials obj;
+	cout << "\n\t\tEnter new username: ";
+	cin >> obj.username;
+	int i = 0;
+	cout << "\t\tEnter new password(10 characters): ";
+	while (true)
+	{
+		char ch = _getch();
+			if (ch == 13) break;
+		obj.password[i] = ch;
+		cout << '*';
+		i++;
+	}
+	obj.password[i] = '\0';
+	ofstream fout;
+	fout.open("p_confidentials", ios::trunc | ios::binary);
+	fout.write((char *)&obj, sizeof(obj));
+	fout.close();
 }
-void credentials :: pi_n() {
+void credentials ::pi_n()
+{
 	credentials obj;
 	int j = 0;
-	cout<<"\n\t\tEnter pin(used while doing forget password/4 character): ";
-		while (true) {
-			char c = _getch();
-			if(c==13) {
-				break;
-			}
-			obj.pin[j] = c;
-			cout<<"*";
-			j++;
+	cout << "\n\t\tEnter pin(used while doing forget password/4 character): ";
+	while (true)
+	{
+		char c = _getch();
+		if (c == 13)
+		{
+			break;
 		}
-		
-		obj.pin[j] = '\0';
-		ofstream fout1;
-		fout1.open("pin", ios::binary);
-		fout1.write((char*)&obj, sizeof(obj));
-		fout1.close();
-	
+		obj.pin[j] = c;
+		cout << "*";
+		j++;
+	}
+
+	obj.pin[j] = '\0';
+	ofstream fout1;
+	fout1.open("pin", ios::binary);
+	fout1.write((char *)&obj, sizeof(obj));
+	fout1.close();
 }
 
-int credentials :: login()
-    {
-    	credentials obj;
-        system("cls");
-        cout << "\t\t<<------Log In------>>" << endl;
-        cout << "\n\t\tUsername: ";
-        cin >> temp_un;
-        int i = 0;
-        cout << "\t\tPassword: ";
-        while (true)
-        {
-            char ch = _getch();
-            if (ch == 13)       
-                break;
-            temp_pass[i] = ch;
-            cout << '*';
-            i++;
-        }
-        temp_pass[i] = '\0';
-        ifstream fin;
-        fin.open("p_confidentials",ios::binary);
-        fin.seekg(0, ios::beg);
-		fin.read((char*)&obj,sizeof(obj));
-        if (strcmp(obj.username, temp_un) == 0 && strcmp(obj.password, temp_pass) == 0)
-        {
-            cout << endl
-                 << "\n\t\tLogin successful" << endl;
-            cout << "\t\tLogging in . . . ." << endl;
-            sleep(3);
-            return 1;
-        }
-        else
-        {
-            cout << endl
-                 << "\n\t\tLogin failed! Invalid username or password." << endl;
-            cout << "\t\tPress any key to go back" << endl;
-            getch();
-            return 0;
-        }
-        fin.close();
-    }
+int credentials ::login()
+{
+	credentials obj;
+	system("cls");
+	cout << "\t\t<<------Log In------>>" << endl;
+	cout << "\n\t\tUsername: ";
+	cin >> temp_un;
+	int i = 0;
+	cout << "\t\tPassword(10 characters): ";
+	while (true)
+	{
+		char ch = _getch();
+		if (ch == 13)
+			break;
+		temp_pass[i] = ch;
+		cout << '*';
+		i++;
+	}
+	temp_pass[i] = '\0';
+	ifstream fin;
+	fin.open("p_confidentials", ios::binary);
+	fin.seekg(0, ios::beg);
+	fin.read((char *)&obj, sizeof(obj));
+	if (strcmp(obj.username, temp_un) == 0 && strcmp(obj.password, temp_pass) == 0)
+	{
+		cout << endl
+			 << "\n\t\tLogin successful" << endl;
+		cout << "\t\tLogging in . . . ." << endl;
+		sleep(3);
+		return 1;
+	}
+	else
+	{
+		cout << endl
+			 << "\n\t\tLogin failed! Invalid username or password." << endl;
+		cout << "\t\tPress any key to go back" << endl;
+		getch();
+		return 0;
+	}
+	fin.close();
+}
 
-    void credentials :: forgot_pass()
-    {
-    	credentials obj;
-        system("cls");
-        int j = 0;
-        cout << "\n\t\tEnter the pin:";
-        while (true)
-        {
-            char c = _getch(); 
-            if (c == 13)       
-                break;
-            p[j] = c;
-            cout << '*'; 
-            j++;
-        }
-        p[j] = '\0'; 
-        ifstream fin;
-        fin.open("pin", ios :: binary);
-    	fin.read((char*)&obj,sizeof(obj));
-        if (strcmp(p, obj.pin) == 0)
-        {
-            cout << endl;
-            signup();
-        }
-        else
-        {
-            cout << endl
-                 << "\t\tWrong pin!!!!!" << endl;
-        }
-        cout << endl
-             << "\n\t\tPress any key to go back" << endl;
-        getch();
-        fin.close();
-    }
+void credentials ::forgot_pass()
+{
+	credentials obj;
+	system("cls");
+	int j = 0;
+	cout << "\n\t\tEnter the pin(4 characters):";
+	while (true)
+	{
+		char c = _getch();
+		if (c == 13)
+			break;
+		p[j] = c;
+		cout << '*';
+		j++;
+	}
+	p[j] = '\0';
+	ifstream fin;
+	fin.open("pin", ios ::binary);
+	fin.read((char *)&obj, sizeof(obj));
+	if (strcmp(p, obj.pin) == 0)
+	{
+		cout << endl;
+		signup();
+	}
+	else
+	{
+		cout << endl
+			 << "\t\tWrong pin!!!!!" << endl;
+	}
+	cout << endl
+		 << "\n\t\tPress any key to go back" << endl;
+	getch();
+	fin.close();
+}
 void menu_doc_info() // global function
 {
 	doctor obj;
@@ -497,13 +481,13 @@ void menu_doc_info() // global function
 	{
 		system("cls");
 		cout << "\t\t<<------- DOCTORS INFORMATION------->>" << endl;
-		cout << "\n\t\ta. Add Doctor"<<endl;
-		cout << "\t\tb. Display All Doctors"<<endl;
-		cout << "\t\tc. Search Doctor"<<endl;
-		cout << "\t\td. Edit Doctor Details"<<endl;
-		cout << "\t\te. Delete Doctor"<<endl;
-		cout << "\t\tf. Delete All Doctors"<<endl;
-		cout << "\t\tg. Back"<<endl;
+		cout << "\n\t\ta. Add Doctor" << endl;
+		cout << "\t\tb. Display All Doctors" << endl;
+		cout << "\t\tc. Search Doctor" << endl;
+		cout << "\t\td. Edit Doctor Details" << endl;
+		cout << "\t\te. Delete Doctor" << endl;
+		cout << "\t\tf. Delete All Doctors" << endl;
+		cout << "\t\tg. Back" << endl;
 		char choice;
 		cout << "\n\t\tEnter your choice (a-g): ";
 		cin >> choice;
@@ -539,11 +523,11 @@ void menu_doc_info() // global function
 
 		default:
 			system("cls");
-			cout << "\t\tInvalid Choice...."<<endl;
-			cout << "\t\tPlease Enter from a to g"<<endl;
+			cout << "\t\tInvalid Choice...." << endl;
+			cout << "\t\tPlease Enter from a to g" << endl;
 			break;
 		}
-		cout << "\n\t\t\tPress any key to go to menu"<<endl;
+		cout << "\n\t\t\tPress any key to go to menu" << endl;
 		getch();
 	}
 }
@@ -555,105 +539,101 @@ void menu_appoint_check() // global function
 		system("cls");
 		char choice;
 		cout << "\t\t<<------MENU OF APPOINTMENT SERVICE------>>" << endl;
-		cout << "\n\t\ta.Anesthesiology" << endl;
-		cout << "\t\tb.Gynocology" << endl;
-		cout << "\t\tc.Neurology" << endl;
-		cout << "\t\td.Radiology" << endl;
-		cout << "\t\te.Cardiology" << endl;
-		cout << "\t\tf.Hysterology" << endl;
-		cout << "\t\tg.ENT" << endl;
-		cout << "\t\th.Physiology" << endl;
-		cout << "\t\ti.Back" << endl;
-		cout << "\n\t\tEnter the choice (a-i): ";
+		cout << "\n\t\ta.Gynocology" << endl;
+		cout << "\t\tb.Neurology" << endl;
+		cout << "\t\tc.Radiology" << endl;
+		cout << "\t\td.Cardiology" << endl;
+		cout << "\t\te.Hysterology" << endl;
+		cout << "\t\tf.ENT" << endl;
+		cout << "\t\tg.Physiology" << endl;
+		cout << "\t\th.Back" << endl;
+		cout << "\n\t\tEnter the choice (a-h): ";
 		cin >> choice;
 		switch (choice)
 		{
 		case 'a':
-			obj.anesthesiology();
-			break;
-		case 'b':
 			obj.gynocology();
 			break;
-		case 'c':
+		case 'b':
 			obj.neurology();
 			break;
-		case 'd':
+		case 'c':
 			obj.radiology();
 			break;
-		case 'e':
+		case 'd':
 			obj.cardiology();
 			break;
-		case 'f':
+		case 'e':
 			obj.hysterology();
 			break;
-		case 'g':
+		case 'f':
 			obj.ent();
 			break;
-		case 'h':
+		case 'g':
 			obj.physiology();
 			break;
-		case 'i':
+		case 'h':
 			system("cls");
 			return;
 		default:
 			system("cls");
 			cout << "\t\tInvalid Choice" << endl;
-			cout << "\t\tPlease Press from a to i" << endl;
+			cout << "\t\tPlease Press from a to h" << endl;
 			break;
 		}
 		cout << "\n\t\tPress any key to go back" << endl;
 		getch();
 	}
 }
-void appoint_doc()//global function
+void appoint_doc() // global function
 {
 	menu_appoint_check();
 }
 int main()
 {
-	
+
 	credentials obj;
-    ifstream fin;
-    fin.open("p_confidentials", ios::binary);
-    if (!fin.is_open()) 
-    {
-        system("cls");
-        cout << "\t\t<<------Sign up------>>" << endl;
-        obj.signup();
-        obj.pi_n();
-    }
-    fin.close();
-flag:          
-    int loggedin = 0;
-    char ch;
-    while (loggedin == 0)
-    {
-        system("cls");
-        cout << "\n\t\ta.Login" << endl
-             << "\t\tb.Forgot password" << endl
-             << "\t\tc.Exit" << endl;
-        cout << "\n\t\tEnter your choice(a-c):";
-        cin >> ch;
-        switch (ch)
-        {
-        case 'a':
-        {
-            loggedin = obj.login();
-            break;
-        case 'b':
-            obj.forgot_pass();
-            break;
-        case 'c':
-            exit(0);
-        default:
-            system("cls");
-            cout << "\t\tInvalid choice!!!!!" << endl;
-            cout<< "\n\t\tPress any key to go to back" << endl;
-            getch();
-            break;
-        }
-        }
-    }
+	ifstream fin;
+	fin.open("p_confidentials", ios::binary);
+	if (!fin.is_open())
+	{
+		system("cls");
+		cout << "\t\t<<------Sign up------>>" << endl;
+		obj.signup();
+		obj.pi_n();
+	}
+	fin.close();
+flag:
+	int loggedin = 0;
+	char ch;
+	while (loggedin == 0)
+	{
+		system("cls");
+		cout << "\n\t\ta.Login" << endl
+			 << "\t\tb.Forgot password" << endl
+			 << "\t\tc.Exit" << endl;
+		cout << "\n\t\tEnter your choice(a-c):";
+		cin >> ch;
+		switch (ch)
+		{
+		case 'a':
+		{
+			loggedin = obj.login();
+			break;
+		case 'b':
+			obj.forgot_pass();
+			break;
+		case 'c':
+			exit(0);
+		default:
+			system("cls");
+			cout << "\t\tInvalid choice!!!!!" << endl;
+			cout << "\n\t\tPress any key to go to back" << endl;
+			getch();
+			break;
+		}
+		}
+	}
 	while (1)
 	{
 		system("cls");
@@ -681,9 +661,9 @@ flag:
 			exit(0);
 		default:
 			system("cls");
-			cout << "\t\tInvalid Choice...."<<endl;
-			cout << "\t\tPlease Enter from a to d"<<endl;
-			cout<<"\n\t\tPress any key to go to menu....."<<endl;
+			cout << "\t\tInvalid Choice...." << endl;
+			cout << "\t\tPlease Enter from a to d" << endl;
+			cout << "\n\t\tPress any key to go to menu....." << endl;
 			getch();
 			break;
 		}
