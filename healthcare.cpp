@@ -3,28 +3,25 @@
 #include <string>
 #include <fstream>
 #include <conio.h>
+#include <unistd.h>
 using namespace std;
 class doctor
 {
-public:
+    protected:
 	char doc_name[50];
 	int license_no;
 	char spec[30];
 	char status[30];
 	int temp_license_no;
+	public:
+	void show(doctor &obj);
+	void check_found(int &found);
 	void AddDoctor();
 	void DisplayAllDoctors();
 	void DeleteDoctor();
 	void DeleteAllDoctor();
 	void EditDoctorsDetails();
 	void SearchDoctor();
-	void show(doctor &obj)
-	{
-		cout << "Name: " << obj.doc_name << endl;
-		cout << "Speciality: " << obj.spec << endl;
-		cout << "License no: " << obj.license_no << endl;
-		cout << "______________________________" << endl;
-	}
 	void anesthesiology();
 	void gynocology();
 	void neurology();
@@ -34,21 +31,36 @@ public:
 	void physiology();
 	void ent();
 };
+	void  doctor::show(doctor &obj)
+	{
+		cout << "\n\t\tName: " << obj.doc_name << endl;
+		cout << "\t\tSpeciality: " << obj.spec << endl;
+		cout << "\t\tLicense no: " << obj.license_no << endl;
+		cout << "\t\t______________________________" << endl;
+	}
+	void doctor::check_found(int &found)
+	{
+		if(found==0)
+		{
+			cout<<"\n\t\tNo doctor found!!!!!"<<endl;
+		}
+	}
 void doctor::AddDoctor()
 {
 	doctor obj;
 	system("cls");
 	cin.ignore();
-	cout << "*****Add Doctor Details*****" << endl;
-	cout << "Enter the name of the doctor:";
+	cout << "\t\t<<------Add Doctor Details------>>" << endl;
+	cout << "\n\t\tEnter the name of the doctor:";
 	cin.getline(obj.doc_name, 50);
-	cout << "Enter license number:";
+	cout << "\t\tEnter license number:";
 	cin >> obj.license_no;
-	cout << "Enter the speciality:";
+	cout << "\t\tEnter the speciality:";
 	cin >> obj.spec;
 	ofstream fout;
 	fout.open("doctordata", ios::binary | ios::app);
 	fout.write((char *)&obj, sizeof(obj));
+	cout<<"\n\t\tDetails added successfully"<<endl;
 	fout.close();
 }
 void doctor::DisplayAllDoctors()
@@ -56,7 +68,7 @@ void doctor::DisplayAllDoctors()
 	int found = 0;
 	doctor obj;
 	system("cls");
-	cout << "*****Display All Doctor Details*****" << endl;
+	cout << "\t\t<<------Display All Doctor Details------>>" << endl;
 	ifstream fin;
 	fin.open("doctordata", ios::binary);
 	fin.seekg(0, ios::beg);
@@ -68,7 +80,7 @@ void doctor::DisplayAllDoctors()
 	fin.close();
 	if (found == 0)
 	{
-		cout << "No data found!!!!!" << endl;
+		cout << "\n\t\tNo data found!!!!!" << endl;
 	}
 }
 void doctor::DeleteDoctor()
@@ -76,8 +88,8 @@ void doctor::DeleteDoctor()
 	int found = 0;
 	doctor obj;
 	system("cls");
-	cout << "*****Delete Doctor Details*****" << endl;
-	cout << "Enter license number : ";
+	cout << "\t\t<<------Delete Doctor Details------>> "<< endl;
+	cout << "\n\t\tEnter license number : ";
 	cin >> temp_license_no;
 	ifstream fin;
 	ofstream fout;
@@ -102,29 +114,29 @@ void doctor::DeleteDoctor()
 	rename("tempdoctordata", "doctordata");
 	if (found == 1)
 	{
-		cout << "Data deleted successfully....." << endl;
+		cout << "\n\t\tDetails deleted successfully....." << endl;
 	}
 	else
 	{
-		cout << "Invalid license number!!!!!" << endl;
+		cout << "\n\t\tInvalid license number!!!!!" << endl;
 	}
 }
 void doctor::DeleteAllDoctor()
 {
 	system("cls");
-	cout << "*****Delete ALL Doctor Details*****" << endl;
+	cout << "\t\t<<------Delete ALL Doctor Details------>>" << endl;
 	ofstream fout;
 	fout.open("doctordata", ios::trunc);
 	fout.close();
-	cout << "All data deleted successfully....." << endl;
+	cout << "\n\t\tAll data deleted successfully....." << endl;
 }
 void doctor::EditDoctorsDetails()
 {
 	int found = 0;
 	doctor obj;
 	system("cls");
-	cout << "*****Edit Doctor Details*****" << endl;
-	cout << "Enter the license number:";
+	cout << "\t\t<<------Edit Doctor Details------>>" << endl;
+	cout << "\n\t\tEnter the license number:";
 	cin >> temp_license_no;
 	fstream finout;
 	finout.open("doctordata", ios::in | ios::out | ios::binary);
@@ -136,11 +148,12 @@ void doctor::EditDoctorsDetails()
 		{
 			found = 1;
 			cin.ignore();
-			cout << "enter the name of the doctor:";
+			show(obj);
+			cout << "\n\t\tEnter the name of the doctor:";
 			cin.getline(obj.doc_name, 50);
-			cout << "Enter license number:";
+			cout << "\t\tEnter license number:";
 			cin >> obj.license_no;
-			cout << "Enter the speciality:";
+			cout << "\t\tEnter the speciality:";
 			cin >> obj.spec;
 			int pos = finout.tellg();
 			finout.seekp(pos - sizeof(obj), ios::beg);
@@ -150,11 +163,11 @@ void doctor::EditDoctorsDetails()
 	}
 	if (found == 0)
 	{
-		cout << "Details not found!!!!!" << endl;
+		cout << "\n\t\tDetails not found!!!!!" << endl;
 	}
 	else
 	{
-		cout << "Details edited successfully....." << endl;
+		cout << "\n\t\tDetails edited successfully....." << endl;
 	}
 	finout.close();
 }
@@ -163,8 +176,8 @@ void doctor::SearchDoctor()
 	int found = 0;
 	doctor obj;
 	system("cls");
-	cout << "*****Search Doctor*****" << endl;
-	cout << "Enter the license number:";
+	cout << "\t\t<<------Search Doctor------>>" << endl;
+	cout << "\n\t\tEnter the license number:";
 	cin >> temp_license_no;
 	ifstream fin;
 	fin.open("doctordata", ios::binary);
@@ -177,15 +190,12 @@ void doctor::SearchDoctor()
 		}
 	}
 	fin.close();
-	if (found == 0)
-	{
-		cout << "No doctor found!!!!!" << endl;
-	}
+    check_found(found);
 }
 void doctor::anesthesiology()
 {
 	system("cls");
-	cout << "<<------Anesthesiology------>>" << endl;
+	cout << "\t\t<<------Anesthesiology------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -199,16 +209,13 @@ void doctor::anesthesiology()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+    check_found(found);
 	fin.close();
 }
 void doctor::physiology()
 {
 	system("cls");
-	cout << "<<------Physiology------>>" << endl;
+	cout << "\t\t<<------Physiology------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -216,22 +223,19 @@ void doctor::physiology()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "Physicology") == 0)
+		if (strcmp(obj.spec, "physiology") == 0)
 		{
 			found = 1;
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+	check_found(found);
 	fin.close();
 }
 void doctor::gynocology()
 {
 	system("cls");
-	cout << "<<------Gynocology------>>" << endl;
+	cout << "\t\t<<------Gynocology------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -245,16 +249,13 @@ void doctor::gynocology()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+	check_found(found);
 	fin.close();
 }
 void doctor::neurology()
 {
 	system("cls");
-	cout << "<<------Neurology------>>" << endl;
+	cout << "\t\t<<------Neurology------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -268,16 +269,13 @@ void doctor::neurology()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+ 	check_found(found);
 	fin.close();
 }
 void doctor::radiology()
 {
 	system("cls");
-	cout << "<<------Radiology----->>" << endl;
+	cout << "\t\t<<------Radiology----->>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -291,16 +289,13 @@ void doctor::radiology()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+ 	check_found(found);
 	fin.close();
 }
 void doctor::cardiology()
 {
 	system("cls");
-	cout << "<<------Cardiology------>>" << endl;
+	cout << "\t\t<<------Cardiology------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -315,16 +310,13 @@ void doctor::cardiology()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+	check_found(found);
 	fin.close();
 }
 void doctor::hysterology()
 {
 	system("cls");
-	cout << "<<------Hysterology------>>" << endl;
+	cout << "\t\t<<------Hysterology------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -338,16 +330,13 @@ void doctor::hysterology()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+    check_found(found);
 	fin.close();
 }
 void doctor::ent()
 {
 	system("cls");
-	cout << "<<------ENT------>>" << endl;
+	cout << "\t\t<<------ENT------>>" << endl;
 	doctor obj;
 	int found = 0;
 	ifstream fin;
@@ -361,29 +350,162 @@ void doctor::ent()
 			show(obj);
 		}
 	}
-	if (found == 0)
-	{
-		cout << "Doctor not available!!!!!" << endl;
-	}
+    check_found(found);
 	fin.close();
 }
+
+class credentials {
+	private:
+		char username[50];
+		char password[50];
+		char pin[5];
+		char p[5];
+		char temp_un[50];
+		char temp_pass[50];
+		
+		public:
+			void signup();
+			void pi_n();
+			int login();
+			void forgot_pass();
+			
+
+};
+
+void credentials ::signup() {
+				credentials obj;
+				cout<<"\n\t\tEnter new username: ";
+				cin>>obj.username;
+				int i=0;
+				cout<< "\t\tEnter new password: ";
+				while(true) {
+					char  ch = _getch();
+					if(ch==13)
+						break;
+					obj.password[i] = ch;
+					cout<< '*';
+					i++;
+				}
+				obj.password[i] = '\0';
+				ofstream fout;
+				fout.open("p_confidentials", ios::trunc|ios::binary);
+				fout.write((char*)&obj,sizeof(obj));
+				fout.close();
+}
+void credentials :: pi_n() {
+	credentials obj;
+	int j = 0;
+	cout<<"\n\t\tEnter pin(used while doing forget password/4 character): ";
+		while (true) {
+			char c = _getch();
+			if(c==13) {
+				break;
+			}
+			obj.pin[j] = c;
+			cout<<"*";
+			j++;
+		}
+		
+		obj.pin[j] = '\0';
+		ofstream fout1;
+		fout1.open("pin", ios::binary);
+		fout1.write((char*)&obj, sizeof(obj));
+		fout1.close();
+	
+}
+
+int credentials :: login()
+    {
+    	credentials obj;
+        system("cls");
+        cout << "\t\t<<------Log In------>>" << endl;
+        cout << "\n\t\tUsername: ";
+        cin >> temp_un;
+        int i = 0;
+        cout << "\t\tPassword: ";
+        while (true)
+        {
+            char ch = _getch();
+            if (ch == 13)       
+                break;
+            temp_pass[i] = ch;
+            cout << '*';
+            i++;
+        }
+        temp_pass[i] = '\0';
+        ifstream fin;
+        fin.open("p_confidentials",ios::binary);
+        fin.seekg(0, ios::beg);
+		fin.read((char*)&obj,sizeof(obj));
+        if (strcmp(obj.username, temp_un) == 0 && strcmp(obj.password, temp_pass) == 0)
+        {
+            cout << endl
+                 << "\n\t\tLogin successful" << endl;
+            cout << "\t\tLogging in . . . ." << endl;
+            sleep(3);
+            return 1;
+        }
+        else
+        {
+            cout << endl
+                 << "\n\t\tLogin failed! Invalid username or password." << endl;
+            cout << "\t\tPress any key to go back" << endl;
+            getch();
+            return 0;
+        }
+        fin.close();
+    }
+
+    void credentials :: forgot_pass()
+    {
+    	credentials obj;
+        system("cls");
+        int j = 0;
+        cout << "\n\t\tEnter the pin:";
+        while (true)
+        {
+            char c = _getch(); 
+            if (c == 13)       
+                break;
+            p[j] = c;
+            cout << '*'; 
+            j++;
+        }
+        p[j] = '\0'; 
+        ifstream fin;
+        fin.open("pin", ios :: binary);
+    	fin.read((char*)&obj,sizeof(obj));
+        if (strcmp(p, obj.pin) == 0)
+        {
+            cout << endl;
+            signup();
+        }
+        else
+        {
+            cout << endl
+                 << "\t\tWrong pin!!!!!" << endl;
+        }
+        cout << endl
+             << "\n\t\tPress any key to go back" << endl;
+        getch();
+        fin.close();
+    }
 void menu_doc_info() // global function
 {
 	doctor obj;
 	while (1)
 	{
-	flag:
 		system("cls");
-		cout << "<<------- DOCTORS INFORMATION------->>" << endl;
-		cout << "\t\ta. Add Doctor\n";
-		cout << "\t\tb. Display All Doctors\n";
-		cout << "\t\tc. Search Doctor\n";
-		cout << "\t\td. Edit Doctor Details\n";
-		cout << "\t\te. Delete Doctor\n";
-		cout << "\t\tf. Delete All Doctors\n";
-		cout << "\t\tg. Back\n";
+		cout << "\t\t<<------- DOCTORS INFORMATION------->>" << endl;
+		cout << "\n\t\ta. Add Doctor"<<endl;
+		cout << "\t\tb. Display All Doctors"<<endl;
+		cout << "\t\tc. Search Doctor"<<endl;
+		cout << "\t\td. Edit Doctor Details"<<endl;
+		cout << "\t\te. Delete Doctor"<<endl;
+		cout << "\t\tf. Delete All Doctors"<<endl;
+		cout << "\t\tg. Back"<<endl;
 		char choice;
-		cout << "\n\t\tEnter your choice: ";
+		cout << "\n\t\tEnter your choice (a-g): ";
 		cin >> choice;
 		switch (choice)
 		{
@@ -417,11 +539,11 @@ void menu_doc_info() // global function
 
 		default:
 			system("cls");
-			cout << "\n\t\tInvalid Choice....\n";
-			cout << "\t\tPlease Enter from a to g\n";
+			cout << "\t\tInvalid Choice...."<<endl;
+			cout << "\t\tPlease Enter from a to g"<<endl;
 			break;
 		}
-		cout << "\n\t\t\t\t\tPress any key to go to menu";
+		cout << "\n\t\t\tPress any key to go to menu"<<endl;
 		getch();
 	}
 }
@@ -430,20 +552,19 @@ void menu_appoint_check() // global function
 	doctor obj;
 	while (1)
 	{
-	flag:
 		system("cls");
 		char choice;
-		cout << "<<------MENU OF APPOINTMENT SERVICE------>>" << endl;
-		cout << "a.Anesthesiology" << endl;
-		cout << "b.Gynocology" << endl;
-		cout << "c.Neurology" << endl;
-		cout << "d.Radiology" << endl;
-		cout << "e.Cardiology" << endl;
-		cout << "f.Hysterology" << endl;
-		cout << "g.ENT" << endl;
-		cout << "h.Physiology" << endl;
-		cout << "i.Back" << endl;
-		cout << "Enter the choice: ";
+		cout << "\t\t<<------MENU OF APPOINTMENT SERVICE------>>" << endl;
+		cout << "\n\t\ta.Anesthesiology" << endl;
+		cout << "\t\tb.Gynocology" << endl;
+		cout << "\t\tc.Neurology" << endl;
+		cout << "\t\td.Radiology" << endl;
+		cout << "\t\te.Cardiology" << endl;
+		cout << "\t\tf.Hysterology" << endl;
+		cout << "\t\tg.ENT" << endl;
+		cout << "\t\th.Physiology" << endl;
+		cout << "\t\ti.Back" << endl;
+		cout << "\n\t\tEnter the choice (a-i): ";
 		cin >> choice;
 		switch (choice)
 		{
@@ -476,26 +597,73 @@ void menu_appoint_check() // global function
 			return;
 		default:
 			system("cls");
-			cout << "Invalid Choice" << endl;
-			cout << "Please Press from a to i" << endl;
+			cout << "\t\tInvalid Choice" << endl;
+			cout << "\t\tPlease Press from a to i" << endl;
 			break;
 		}
-		cout << "Press any key to go to menu" << endl;
+		cout << "\n\t\tPress any key to go back" << endl;
 		getch();
 	}
 }
+void appoint_doc()//global function
+{
+	menu_appoint_check();
+}
 int main()
 {
+	
+	credentials obj;
+    ifstream fin;
+    fin.open("p_confidentials", ios::binary);
+    if (!fin.is_open()) 
+    {
+        system("cls");
+        cout << "\t\t<<------Sign up------>>" << endl;
+        obj.signup();
+        obj.pi_n();
+    }
+    fin.close();
+flag:          
+    int loggedin = 0;
+    char ch;
+    while (loggedin == 0)
+    {
+        system("cls");
+        cout << "\n\t\ta.Login" << endl
+             << "\t\tb.Forgot password" << endl
+             << "\t\tc.Exit" << endl;
+        cout << "\n\t\tEnter your choice(a-c):";
+        cin >> ch;
+        switch (ch)
+        {
+        case 'a':
+        {
+            loggedin = obj.login();
+            break;
+        case 'b':
+            obj.forgot_pass();
+            break;
+        case 'c':
+            exit(0);
+        default:
+            system("cls");
+            cout << "\t\tInvalid choice!!!!!" << endl;
+            cout<< "\n\t\tPress any key to go to back" << endl;
+            getch();
+            break;
+        }
+        }
+    }
 	while (1)
 	{
 		system("cls");
-		cout << "<<------MAIN MENU------>>" << endl;
-		cout << "a.Appointment check" << endl
-			 << "b.Appoint the doctor" << endl
-			 << "c.Doctor Information" << endl
-			 << "d.exit" << endl;
+		cout << "\t\t<<------MAIN MENU------>>" << endl;
+		cout << "\n\t\ta.Appointment check" << endl
+			 << "\t\tb.Appoint the doctor" << endl
+			 << "\t\tc.Doctor Information" << endl
+			 << "\t\td.Exit" << endl;
 		char choice;
-		cout << "Enter the choice:";
+		cout << "\n\t\tEnter the choice (a-d):";
 		cin >> choice;
 		switch (choice)
 		{
@@ -503,7 +671,7 @@ int main()
 			menu_appoint_check();
 			break;
 		case 'b':
-			// baaki xa
+			appoint_doc();
 			break;
 		case 'c':
 			menu_doc_info();
@@ -513,8 +681,10 @@ int main()
 			exit(0);
 		default:
 			system("cls");
-			cout << "\n\t\tInvalid Choice....\n";
-			cout << "\t\tPlease Enter from a to d\n";
+			cout << "\t\tInvalid Choice...."<<endl;
+			cout << "\t\tPlease Enter from a to d"<<endl;
+			cout<<"\n\t\tPress any key to go to menu....."<<endl;
+			getch();
 			break;
 		}
 	}
