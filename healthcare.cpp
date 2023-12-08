@@ -7,12 +7,13 @@
 using namespace std;
 class doctor
 {
-protected:
+public:
+	int appointed_pat_no;
 	char doc_name[50];
 	int license_no;
-	char spec[30];
-	char status[30];
 	int temp_license_no;
+	char spec[30];
+	int limit = 2;
 
 public:
 	void show(doctor &obj);
@@ -42,7 +43,7 @@ void doctor::check_found(int &found)
 {
 	if (found == 0)
 	{
-		cout << "\n\t\tNo doctor found!!!!!" << endl;
+		cout << "\n\t\tDoctor Unavailable!!!!!" << endl;
 	}
 }
 void doctor::AddDoctor()
@@ -57,6 +58,7 @@ void doctor::AddDoctor()
 	cin >> obj.license_no;
 	cout << "\t\tEnter the speciality:";
 	cin >> obj.spec;
+	obj.appointed_pat_no = 0;
 	ofstream fout;
 	fout.open("doctordata", ios::binary | ios::app);
 	fout.write((char *)&obj, sizeof(obj));
@@ -191,7 +193,10 @@ void doctor::SearchDoctor()
 		}
 	}
 	fin.close();
-	check_found(found);
+	if (found == 0)
+	{
+		cout << "\n\t\tDoctor not found!!!!!" << endl;
+	}
 }
 
 void doctor::physiology()
@@ -205,7 +210,7 @@ void doctor::physiology()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "physiology") == 0)
+		if (strcmp(obj.spec, "physiology") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -225,7 +230,7 @@ void doctor::gynocology()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "gynocology") == 0)
+		if (strcmp(obj.spec, "gynocology") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -245,7 +250,7 @@ void doctor::neurology()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "neurology") == 0)
+		if (strcmp(obj.spec, "neurology") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -265,7 +270,7 @@ void doctor::radiology()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "radiology") == 0)
+		if (strcmp(obj.spec, "radiology") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -286,7 +291,7 @@ void doctor::cardiology()
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
 
-		if (strcmp(obj.spec, "cardiology") == 0)
+		if (strcmp(obj.spec, "cardiology") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -306,7 +311,7 @@ void doctor::hysterology()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "hysterology") == 0)
+		if (strcmp(obj.spec, "hysterology") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -326,7 +331,7 @@ void doctor::ent()
 	fin.seekg(0, ios::beg);
 	while (fin.read((char *)&obj, sizeof(obj)))
 	{
-		if (strcmp(obj.spec, "ent") == 0)
+		if (strcmp(obj.spec, "ent") == 0 && (obj.appointed_pat_no < obj.limit))
 		{
 			found = 1;
 			show(obj);
@@ -335,7 +340,108 @@ void doctor::ent()
 	check_found(found);
 	fin.close();
 }
+class patient : public doctor
+{
+protected:
+	int appointed_doc;
+	char patient_name[50];
+	char gender[10];
+	int age;
 
+public:
+	void book_doc();
+	void show_patient();
+};
+void patient ::book_doc()
+{
+	system("cls");
+	cout << "\t\t<<------Appoint Doctor------>>" << endl;
+	int appoint = 0;
+	int busy = 0;
+	int found = 0;
+	doctor obj;
+	cout << "\n\t\tEnter the license no of doctor to appoint: ";
+	cin >> temp_license_no;
+	fstream finout;
+	finout.open("doctordata", ios::in | ios::out | ios::binary);
+	finout.seekg(0, ios::beg);
+	while (finout.read((char *)&obj, sizeof(obj)))
+	{
+		if (obj.license_no == temp_license_no)
+		{
+			found = 1;
+			if (obj.appointed_pat_no < obj.limit)
+			{
+				busy = 0;
+				appoint = 1;
+
+				patient obj1;
+				cin.ignore();
+				cout << "\n\t\tEnter patient name : ";
+				cin.getline(obj1.patient_name, 50);
+				cout << "\t\tEnter patient age : ";
+				cin >> obj1.age;
+				cout << "\t\tEnter patient gender(male/female) : ";
+				cin >> obj1.gender;
+				obj1.appointed_doc = temp_license_no;
+				ofstream fout;
+				fout.open("patientdata", ios::binary | ios::app);
+				fout.write((char *)&obj1, sizeof(obj1));
+				cout << "\n\t\tDoctor appointed successfully....." << endl;
+				fout.close();
+			}
+			else
+			{
+				busy = 1;
+				appoint = 0;
+			}
+			if (appoint == 1)
+			{
+				int pos = finout.tellg();
+				finout.seekp(pos - sizeof(obj), ios::beg);
+				obj.appointed_pat_no++;
+				finout.write((char *)&obj, sizeof(obj));
+			}
+			if (busy == 1)
+			{
+				cout << "\n\t\tDoctor is unavailable!!!!!" << endl;
+			}
+			break;
+		}
+		else
+		{
+			found = 0;
+		}
+	}
+	check_found(found);
+	finout.close();
+}
+void patient::show_patient()
+{
+	int found = 0;
+	patient obj;
+	system("cls");
+	cout << "\t\t<<------Show Patient------>>" << endl;
+	ifstream fin;
+	fin.open("patientdata", ios::binary);
+	fin.seekg(0, ios::beg);
+	while (fin.read((char *)&obj, sizeof(obj)))
+	{
+		found = 1;
+		cout << "\n\t\tPatient name : " << obj.patient_name << endl;
+		cout << "\t\tPatient age : " << obj.age << endl;
+		cout << "\t\tPatient gender(male/female) : " << obj.gender << endl;
+		cout << "\t\tLicense number of appointed doctor :" << obj.appointed_doc << endl;
+		cout << "\t\t____________________________________________" << endl;
+	}
+	fin.close();
+	if (found == 0)
+	{
+		cout << "\n\t\tPatient not found!!!!!" << endl;
+	}
+	cout << "\n\t\tPress any key to go back....." << endl;
+	getch();
+}
 class credentials
 {
 private:
@@ -363,7 +469,8 @@ void credentials ::signup()
 	while (true)
 	{
 		char ch = _getch();
-			if (ch == 13) break;
+		if (ch == 13)
+			break;
 		obj.password[i] = ch;
 		cout << '*';
 		i++;
@@ -397,7 +504,6 @@ void credentials ::pi_n()
 	fout1.write((char *)&obj, sizeof(obj));
 	fout1.close();
 }
-
 int credentials ::login()
 {
 	credentials obj;
@@ -585,10 +691,6 @@ void menu_appoint_check() // global function
 		getch();
 	}
 }
-void appoint_doc() // global function
-{
-	menu_appoint_check();
-}
 int main()
 {
 
@@ -636,14 +738,16 @@ flag:
 	}
 	while (1)
 	{
+		patient obj1;
 		system("cls");
 		cout << "\t\t<<------MAIN MENU------>>" << endl;
 		cout << "\n\t\ta.Appointment check" << endl
 			 << "\t\tb.Appoint the doctor" << endl
 			 << "\t\tc.Doctor Information" << endl
-			 << "\t\td.Exit" << endl;
+			 << "\t\td.Patient information" << endl
+			 << "\t\te.Log out" << endl;
 		char choice;
-		cout << "\n\t\tEnter the choice (a-d):";
+		cout << "\n\t\tEnter the choice (a-e):";
 		cin >> choice;
 		switch (choice)
 		{
@@ -651,12 +755,17 @@ flag:
 			menu_appoint_check();
 			break;
 		case 'b':
-			appoint_doc();
+			obj1.book_doc();
+			cout << "\n\t\tPress any key to go back" << endl;
+			getch();
 			break;
 		case 'c':
 			menu_doc_info();
 			break;
 		case 'd':
+			obj1.show_patient();
+			break;
+		case 'e':
 			system("cls");
 			exit(0);
 		default:

@@ -1,1 +1,1 @@
-hamro project bairako cha kripaya patience rakdinus
+hamro project finally sakiyo
